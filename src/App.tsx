@@ -1,31 +1,70 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SignInForm from './components/SignInForm'
 import { useAuth } from './contexts/AuthContext'
-import { Paper, Typography, CssBaseline, ThemeProvider } from '@mui/material'
-import theme from './theme'
+import { Box, Button, Typography, CircularProgress } from '@mui/material'
 import Layout from './components/Layout'
 
 function App() {
-  const { currentUser } = useAuth()
+  const { user, signOut, signInWithMagicLink } = useAuth()
+  const [isLoading, setIsLoading] = React.useState(true)
+
+  useEffect(() => {
+    // Check if this is a magic link sign-in
+    const email = window.localStorage.getItem('emailForSignIn')
+    if (email) {
+      signInWithMagicLink(email)
+        .catch((error) => {
+          console.error('Error signing in with magic link:', error)
+        })
+        .finally(() => {
+          setIsLoading(false)
+        })
+    } else {
+      setIsLoading(false)
+    }
+  }, [signInWithMagicLink])
+
+  const handleSignOut = async () => {
+    try {
+      await signOut()
+    } catch (error) {
+      console.error('Error signing out:', error)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+          <CircularProgress />
+        </Box>
+      </Layout>
+    )
+  }
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Layout>
-        {currentUser ? (
-          <Paper elevation={3} sx={{ p: 3 }}>
-            <Typography variant="h5" component="h2" gutterBottom>
-              Welcome, {currentUser.email}
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              You are now signed in. Start building your birthday website!
-            </Typography>
-          </Paper>
-        ) : (
-          <SignInForm />
-        )}
-      </Layout>
-    </ThemeProvider>
+    <Layout>
+      {user ? (
+        <Box sx={{ textAlign: 'center', py: 4 }}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Welcome, {user.email}!
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 3 }}>
+            You are now signed in to the Birthday Website Builder.
+          </Typography>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={handleSignOut}
+            sx={{ mt: 2 }}
+          >
+            Sign Out
+          </Button>
+        </Box>
+      ) : (
+        <SignInForm />
+      )}
+    </Layout>
   )
 }
 

@@ -1,20 +1,24 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { 
-  User,
+  User as FirebaseUser,
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
-  signInWithEmailLink
+  signInWithEmailLink,
+  signInWithEmailAndPassword,
+  signOut as firebaseSignOut
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
 
 interface AuthContextType {
-  currentUser: User | null;
+  user: FirebaseUser | null;
   loading: boolean;
   sendMagicLink: (email: string) => Promise<void>;
   signInWithMagicLink: (email: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Action code settings for email link sign-in
 const actionCodeSettings = {
@@ -22,26 +26,18 @@ const actionCodeSettings = {
   handleCodeInApp: true,
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Listen for auth state changes
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setCurrentUser(user);
+      setUser(user);
       setLoading(false);
     });
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   const sendMagicLink = async (email: string) => {
@@ -68,11 +64,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const signIn = async (email: string, password: string) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error('Error signing in:', error);
+      throw error;
+    }
+  };
+
+  const signOut = async () => {
+    try {
+      await firebaseSignOut(auth);
+    } catch (error) {
+      console.error('Error signing out:', error);
+      throw error;
+    }
+  };
+
   const value = {
-    currentUser,
+    user,
     loading,
     sendMagicLink,
     signInWithMagicLink,
+    signIn,
+    signOut,
   };
 
   return (
@@ -80,4 +96,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {!loading && children}
     </AuthContext.Provider>
   );
-}; 
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+} 
