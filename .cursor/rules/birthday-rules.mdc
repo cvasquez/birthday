@@ -1,0 +1,30 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+## Project
+Birthday Website builder
+  
+## description
+An interactive web application that allows parents to create personalized birthday webpages for their children. Parents manage child profiles at the account level and can create new birthday pages for each child. The app includes features such as magic link authentication, AI-driven theme suggestions, a gift guide with affiliate links, interactive games, a messaging system for friends and family, a child-friendly view, and a publish/payment flow.
+
+## Technology:
+* Frontend: Typescript React
+* Auth and backend: Firebase
+* Generative AI Model: Gemini
+* UI Framework: Use one that looks good, is well supported, and is easy to use
+* Linter: Recommended ESLint react plugin
+
+## Development Style:
+* Write real, working code in each prompt
+* Include understandable comments
+* Focus on forward-compatible, MVP-style implementations
+* Avoid overengineering, but leave room for scale
+* Follow best practices for whatever language you are using
+* Make sure the code is formatted consistently
+
+## Cursorshell
+* When running terminal commands in cursorshell, first check if there is an .nvmrc and make sure you're using the node version from it if one exists.
