@@ -1,17 +1,7 @@
-import { type ReactNode } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Container,
-  Box,
-} from "@mui/material";
+import { AppBar, Toolbar, Typography, Container, Box } from "@mui/material";
+import { Outlet } from "react-router-dom";
 
-interface LayoutProps {
-  children: ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+export default function AppLayout() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <AppBar position="static">
@@ -22,10 +12,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </Toolbar>
       </AppBar>
       <Container component="main" sx={{ mt: 4, mb: 4, flex: 1 }}>
-        {children}
+        <Outlet />
       </Container>
     </Box>
   );
-};
-
-export default Layout;
+}

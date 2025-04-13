@@ -1,13 +1,19 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { 
-  User as FirebaseUser,
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
+import {
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
   signInWithEmailAndPassword,
-  signOut as firebaseSignOut
-} from 'firebase/auth';
-import { auth } from '../config/firebase';
+  signOut as firebaseSignOut,
+  type User as FirebaseUser,
+} from "firebase/auth";
+import { auth } from "../config/firebase";
 
 interface AuthContextType {
   user: FirebaseUser | null;
@@ -38,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      console.error('Error signing in:', error);
+      console.error("Error signing in:", error);
       throw error;
     }
   };
@@ -47,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await firebaseSignOut(auth);
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
       throw error;
     }
   };
@@ -55,13 +61,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const sendMagicLink = async (email: string) => {
     try {
       const actionCodeSettings = {
-        url: window.location.origin + '/auth/validate',
+        url: window.location.origin + "/auth/validate",
         handleCodeInApp: true,
       };
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-      window.localStorage.setItem('emailForSignIn', email);
+      window.localStorage.setItem("emailForSignIn", email);
     } catch (error) {
-      console.error('Error sending magic link:', error);
+      console.error("Error sending magic link:", error);
       throw error;
     }
   };
@@ -70,12 +76,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       if (isSignInWithEmailLink(auth, window.location.href)) {
         await signInWithEmailLink(auth, email, window.location.href);
-        window.localStorage.removeItem('emailForSignIn');
+        window.localStorage.removeItem("emailForSignIn");
       } else {
-        throw new Error('Invalid magic link');
+        throw new Error("Invalid magic link");
       }
     } catch (error) {
-      console.error('Error signing in with magic link:', error);
+      console.error("Error signing in with magic link:", error);
       throw error;
     }
   };
@@ -99,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-} 
+}

@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { Box, Button, TextField, Typography, Alert } from '@mui/material';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { Box, Button, TextField, Typography, Alert } from "@mui/material";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { sendMagicLink } = useAuth();
@@ -18,10 +18,10 @@ export default function Login() {
     try {
       await sendMagicLink(email);
       // Show success message and instruct user to check their email
-      navigate('/auth/validate', { state: { email } });
+      navigate("/auth/validate", { state: { email } });
     } catch (err) {
-      setError('Failed to send magic link. Please try again.');
-      console.error('Error sending magic link:', err);
+      setError("Failed to send magic link. Please try again.");
+      console.error("Error sending magic link:", err);
     } finally {
       setIsLoading(false);
     }
@@ -33,18 +33,18 @@ export default function Login() {
       onSubmit={handleSubmit}
       sx={{
         maxWidth: 400,
-        mx: 'auto',
+        mx: "auto",
         mt: 8,
         p: 3,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         gap: 3,
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom align="center">
         Sign In
       </Typography>
-      
+
       <Typography variant="body1" align="center" color="text.secondary">
         Enter your email to receive a magic link for signing in.
       </Typography>
@@ -72,8 +72,8 @@ export default function Login() {
         disabled={isLoading}
         sx={{ mt: 2 }}
       >
-        {isLoading ? 'Sending...' : 'Send Magic Link'}
+        {isLoading ? "Sending..." : "Send Magic Link"}
       </Button>
     </Box>
   );
-} 
+}

@@ -21,21 +21,25 @@ VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ## Installation
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Start the development server:
+
 ```bash
 npm run dev
 ```
 
 3. Build for production:
+
 ```bash
 npm run build
 ```
 
 4. Preview production build:
+
 ```bash
 npm run preview
 ```
@@ -44,15 +48,18 @@ npm run preview
 
 - Passwordless email authentication using magic links
 - Secure user session management
-- Modern, responsive UI with Tailwind CSS
+- Modern, responsive UI with Material UI (MUI)
 - TypeScript for type safety
 - ESLint for code quality
 - Fast development with Vite
 
 ## Project Structure
 
-- `src/config/firebase.ts` - Firebase configuration
-- `src/contexts/AuthContext.tsx` - Authentication context and provider
-- `src/components/SignInForm.tsx` - Magic link sign-in form component
+- `src/` - Main source code directory
+  - `components/` - Reusable UI components
+  - `config/` - Application configuration files including Firebase setup
+  - `contexts/` - React context providers (e.g., AuthContext)
+  - `routes/` - Application routes and page components using [React Router v7 file-based routing conventions](https://reactrouter.com/how-to/file-route-conventions)
+- `public/` - Static assets
 - `vite.config.ts` - Vite configuration
-- `tsconfig.json` - TypeScript configuration 
+- `tsconfig.json` - TypeScript configuration
