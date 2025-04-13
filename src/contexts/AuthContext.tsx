@@ -12,19 +12,13 @@ import { auth } from '../config/firebase';
 interface AuthContextType {
   user: FirebaseUser | null;
   loading: boolean;
-  sendMagicLink: (email: string) => Promise<void>;
-  signInWithMagicLink: (email: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  sendMagicLink: (email: string) => Promise<void>;
+  signInWithMagicLink: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Action code settings for email link sign-in
-const actionCodeSettings = {
-  url: window.location.origin + '/signin',
-  handleCodeInApp: true,
-};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -39,30 +33,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => unsubscribe();
   }, []);
-
-  const sendMagicLink = async (email: string) => {
-    try {
-      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-      // Save the email for later use
-      window.localStorage.setItem('emailForSignIn', email);
-    } catch (error) {
-      console.error('Error sending magic link:', error);
-      throw error;
-    }
-  };
-
-  const signInWithMagicLink = async (email: string) => {
-    try {
-      if (isSignInWithEmailLink(auth, window.location.href)) {
-        await signInWithEmailLink(auth, email, window.location.href);
-        // Clear the saved email
-        window.localStorage.removeItem('emailForSignIn');
-      }
-    } catch (error) {
-      console.error('Error signing in with magic link:', error);
-      throw error;
-    }
-  };
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -82,13 +52,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const sendMagicLink = async (email: string) => {
+    try {
+      const actionCodeSettings = {
+        url: window.location.origin + '/auth/validate',
+        handleCodeInApp: true,
+      };
+      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      window.localStorage.setItem('emailForSignIn', email);
+    } catch (error) {
+      console.error('Error sending magic link:', error);
+      throw error;
+    }
+  };
+
+  const signInWithMagicLink = async (email: string) => {
+    try {
+      if (isSignInWithEmailLink(auth, window.location.href)) {
+        await signInWithEmailLink(auth, email, window.location.href);
+        window.localStorage.removeItem('emailForSignIn');
+      } else {
+        throw new Error('Invalid magic link');
+      }
+    } catch (error) {
+      console.error('Error signing in with magic link:', error);
+      throw error;
+    }
+  };
+
   const value = {
     user,
     loading,
-    sendMagicLink,
-    signInWithMagicLink,
     signIn,
     signOut,
+    sendMagicLink,
+    signInWithMagicLink,
   };
 
   return (

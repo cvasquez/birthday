@@ -1,71 +1,50 @@
-import React, { useEffect } from 'react'
-import SignInForm from './components/SignInForm'
-import { useAuth } from './contexts/AuthContext'
-import { Box, Button, Typography, CircularProgress } from '@mui/material'
-import Layout from './components/Layout'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
 
-function App() {
-  const { user, signOut, signInWithMagicLink } = useAuth()
-  const [isLoading, setIsLoading] = React.useState(true)
+// Import all route components
+import Root from './routes/root';
+import Index from './routes/index';
+import Login from './routes/auth/login';
+import Validate from './routes/auth/validate';
 
-  useEffect(() => {
-    // Check if this is a magic link sign-in
-    const email = window.localStorage.getItem('emailForSignIn')
-    if (email) {
-      signInWithMagicLink(email)
-        .catch((error) => {
-          console.error('Error signing in with magic link:', error)
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
-    } else {
-      setIsLoading(false)
-    }
-  }, [signInWithMagicLink])
-
-  const handleSignOut = async () => {
-    try {
-      await signOut()
-    } catch (error) {
-      console.error('Error signing out:', error)
-    }
-  }
-
-  if (isLoading) {
-    return (
-      <Layout>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-          <CircularProgress />
-        </Box>
-      </Layout>
-    )
-  }
-
+// Create a wrapper component that provides auth context
+function AppWithAuth() {
   return (
-    <Layout>
-      {user ? (
-        <Box sx={{ textAlign: 'center', py: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Welcome, {user.email}!
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 3 }}>
-            You are now signed in to the Birthday Website Builder.
-          </Typography>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={handleSignOut}
-            sx={{ mt: 2 }}
-          >
-            Sign Out
-          </Button>
-        </Box>
-      ) : (
-        <SignInForm />
-      )}
-    </Layout>
-  )
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 }
 
-export default App 
+// Define the router outside of the component to avoid recreation on each render
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    children: [
+      {
+        index: true,
+        element: <Index />,
+      },
+      {
+        path: 'auth',
+        children: [
+          {
+            path: 'login',
+            element: <Login />,
+          },
+          {
+            path: 'validate',
+            element: <Validate />,
+          },
+        ],
+      },
+    ],
+  },
+]);
+
+function App() {
+  return <AppWithAuth />;
+}
+
+export default App; 
