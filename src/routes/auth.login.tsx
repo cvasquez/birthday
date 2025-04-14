@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import { Box, Button, TextField, Typography, Alert } from "@mui/material";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { Box, Button, TextField, Typography, Alert } from '@mui/material';
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { sendMagicLink } = useAuth();
@@ -18,10 +18,10 @@ export default function Login() {
     try {
       await sendMagicLink(email);
       // Show success message and instruct user to check their email
-      navigate("/auth/validate", { state: { email } });
+      navigate('/auth/validate', { state: { email } });
     } catch (err) {
-      setError("Failed to send magic link. Please try again.");
-      console.error("Error sending magic link:", err);
+      setError('Failed to send magic link. Please try again.');
+      console.error('Error sending magic link:', err);
     } finally {
       setIsLoading(false);
     }
@@ -33,11 +33,11 @@ export default function Login() {
       onSubmit={handleSubmit}
       sx={{
         maxWidth: 400,
-        mx: "auto",
+        mx: 'auto',
         mt: 8,
         p: 3,
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         gap: 3,
       }}
     >
@@ -59,20 +59,14 @@ export default function Login() {
         label="Email"
         type="email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={e => setEmail(e.target.value)}
         required
         fullWidth
         disabled={isLoading}
       />
 
-      <Button
-        type="submit"
-        variant="contained"
-        size="large"
-        disabled={isLoading}
-        sx={{ mt: 2 }}
-      >
-        {isLoading ? "Sending..." : "Send Magic Link"}
+      <Button type="submit" variant="contained" size="large" disabled={isLoading} sx={{ mt: 2 }}>
+        {isLoading ? 'Sending...' : 'Send Magic Link'}
       </Button>
     </Box>
   );
