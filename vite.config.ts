@@ -1,7 +1,7 @@
-import { defineConfig } from "vite";
-import { reactRouter } from "@react-router/dev/vite";
-import tsconfigPaths from "vite-tsconfig-paths";
-import path from "path";
+import { defineConfig } from 'vite';
+import { reactRouter } from '@react-router/dev/vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
+import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,11 +12,14 @@ export default defineConfig({
   },
   define: {
     // Vite doesn't include process.env by default
-    "process.env": process.env,
+    'process.env': process.env,
   },
   resolve: {
     alias: {
-      "~": path.resolve(__dirname, "./src"),
+      '~': path.resolve(__dirname, './src'),
     },
+  },
+  build: {
+    ssr: false,
   },
 });

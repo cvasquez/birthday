@@ -1,11 +1,5 @@
-import { type ReactNode } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Container,
-  Box,
-} from "@mui/material";
+import { type ReactNode } from 'react';
+import { AppBar, Toolbar, Typography, Container, Box } from '@mui/material';
 
 interface LayoutProps {
   children: ReactNode;
@@ -13,7 +7,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

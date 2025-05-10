@@ -1,14 +1,6 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, type ChangeEvent } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  Paper, 
-  Typography, 
-  TextField, 
-  Button, 
-  Box, 
-  Alert, 
-  CircularProgress 
-} from '@mui/material';
+import { Paper, Typography, TextField, Button, Box, Alert, CircularProgress } from '@mui/material';
 
 const SignInForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -53,19 +45,19 @@ const SignInForm: React.FC = () => {
       <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 3 }}>
         Enter your email to receive a magic link
       </Typography>
-      
+
       {message && (
         <Alert severity="success" sx={{ mb: 2 }}>
           {message}
         </Alert>
       )}
-      
+
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
-      
+
       <Box component="form" onSubmit={handleSubmit} noValidate>
         <TextField
           margin="normal"
@@ -93,4 +85,4 @@ const SignInForm: React.FC = () => {
   );
 };
 
-export default SignInForm; 
+export default SignInForm;

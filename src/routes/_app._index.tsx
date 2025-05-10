@@ -24,11 +24,7 @@ export default function Index() {
         <Typography variant="body1" sx={{ mb: 3 }}>
           Please sign in to get started.
         </Typography>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={() => navigate('/auth/login')}
-        >
+        <Button variant="contained" color="primary" onClick={() => navigate('/auth/login')}>
           Sign In
         </Button>
       </Box>
@@ -43,13 +39,9 @@ export default function Index() {
       <Typography variant="body1" sx={{ mb: 3 }}>
         You are now signed in to the Birthday Website Builder.
       </Typography>
-      <Button 
-        variant="contained" 
-        color="primary" 
-        onClick={handleSignOut}
-      >
+      <Button variant="contained" color="primary" onClick={handleSignOut}>
         Sign Out
       </Button>
     </Box>
   );
-} 
+}
